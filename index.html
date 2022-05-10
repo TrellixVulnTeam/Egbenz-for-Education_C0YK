@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Egbenz for Education Beta</title>
+    <!-- Version Education Beta -->
+    <script>
+        function search(){
+          let name = document.getElementById("search-input").value
+          window.location.href='/'+name
+        }
+        function newArticle(){
+          window.location.href='/newArticle';
+        }
+        function submit(){
+          let e = window.event || arguments.callee.caller.arguments[0]
+          if(e.keyCode === 13) search()
+        }
+    </script>
+  </head>
+
+  <body>
+    <div class="nav-left">
+      <div class="nav-title"><a href="/">Egbenz</a></div>
+      <div class="nav-search-tools"><input id="search-input" value="<< searchName >>" onkeydown="submit()"/><button onclick="search()">搜索</button><button onclick="newArticle()">新建</button></div>
+      <div class="nav-list">
+        {% for key in articles %}
+        <div class="nav-item"><a href="/article/<< key >>"><< articles[key] >></a></div>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if id and id != None %}
+    <div id="commondMenu" class="commond-menu">
+      <div class="commond-menu-link-editor" style="display: none;">
+        <div>标题:<input id="link-text" type="text"/></div>
+        <div>链接:<input id="link-value" type="value"/></div>
+        <div><button id="link-submit">确认</button></div>
+      </div>
+    </div>
+    {% endif %}
+
+    <div id="main">
+      {% if id and id != None %}
+      <div class="title"><input id="title" value="文件名"/></div>
+      <div id="editor">
+
+      </div>
+      {% else %}
+      <div id="create-article" ><a href="/newArticle">创建新文档</a></div>
+      {% endif %}
+    </div>
+  
+  </body>
+  <script type="text/javascript" src="/static/dist/bundle.js">
+  </script>
+</html>
