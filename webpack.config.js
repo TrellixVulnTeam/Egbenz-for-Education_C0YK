@@ -1,8 +1,10 @@
 const path = require('path')
 const webpack = require('webpack')
 
+const mode = "development" // production || development
+
 module.exports = {
-  mode: "production",
+  mode,
   entry: './app-web/index.js',
 	output: {
 		filename: './bundle.js',

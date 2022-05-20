@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import webbrowser
 import json
-from server.api.models import saveArticle, fetchArticles, fetchArticle, newArticle
+from server.api.models import saveArticle, fetchArticles, fetchArticle, newArticle, executeSQL, serverDirectory
 from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(
@@ -33,6 +33,7 @@ def indexNewArticle():
 
 @app.route('/article/<id>')
 def indexArticle(id):
+  serverDirectory()
   articles = fetchArticles()
   context = {'articles':articles, 'id': id}
   return render_template('index.html', **context)
@@ -51,6 +52,16 @@ def ajaxFetchArticle():
 
   return {'ez': ez, 'id': id, 'title': title}
 
+@app.route('/sql', methods=["GET","POST"])
+def ajaxSQL():
+  data = request.get_data()
+  json_data = json.loads(data.decode("utf-8"))
+  sql = json_data['sql']
+  config = json_data['config']
+  result = executeSQL(sql, config)
+
+  return result
+
 if __name__ == '__main__':
-  webbrowser.open('http://127.0.0.1:5000/', 0, autoraise=False)
-  app.run(debug=False)
+  # webbrowser.open('http://127.0.0.1:5000/', 0, autoraise=False)
+  app.run(debug=True)

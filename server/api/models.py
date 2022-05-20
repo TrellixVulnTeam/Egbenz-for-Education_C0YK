@@ -4,6 +4,10 @@ import json
 import random
 import time
 import os
+from webbrowser import Error
+from pymysql import cursors
+import pymysql.cursors
+
 
 def getFileIndex(name=''):
   fileIndex = {}
@@ -96,3 +100,28 @@ def fetchArticle(id):
     article = json.load(file_obj)
 
   return article, id, getFileIndex()[id]
+
+def executeSQL(sql, config):
+  connection = pymysql.connect(host=config['host'],
+                             user=config['user'],
+                             password=config['password'],
+                             charset='utf8mb4',
+                             cursorclass=pymysql.cursors.DictCursor)
+  try:
+    with connection:
+      with connection.cursor() as cursor:
+          # Create a new record
+          cursor.execute(sql)
+      # connection.commit()
+          desc = cursor.description
+          fetch_result = cursor.fetchall()
+          head = [x[0] for x in desc] 
+          rows = list(map(lambda row: [row[col] for col in row], fetch_result))
+          rows.insert(0, head)
+    return {'result': rows}
+  except pymysql.Error as e:
+    err = str(e.args[1])
+    return {'result':[['错误信息'], [err]]}
+
+def serverDirectory():
+  print(os.path.abspath(os.sep))

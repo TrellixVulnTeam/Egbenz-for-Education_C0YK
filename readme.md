@@ -136,17 +136,22 @@ Make code **Brevity、Understandable、Free**, is our goal.
 We hope you can make progress together with us.
 
 ### 历史版本
+[2022-05-  V1.1]
+- 修正mounted触发时机，从createDOM时刻调整至真实appendChildren时刻。
+- 增加Mysql链接插件,Python env默认安装pymysql。
+- 增加ModSQL模块，支持在文本任意处插入sql执行语句，目前默认执行结果不保存在ez文档中。
+- 其他更新：修正标题版本号，修正F5刷新事件, 调整第三方Mod行全选模式
 
 [2022-05-10 V1]
 
 - 增加F5默认刷新事件
 - 调整Mod继承关系，明确3大基础Mod,BaseText,BaseBlock,BaseExt,同时扩展基本继承方法和属性。
 - 调整开发者环境，增加Webpack打包优化代码。
-- 调整目录结构，database单独形成一级目录
-- html2Ez增加A标签识别，增加ModLink 模块
-- 新增数学公式-ModKatex模块
+- 调整目录结构，database单独形成一级目录。
+- html2Ez增加A标签识别，增加ModLink 模块。
+- 新增数学公式-ModKatex模块。
 - 大幅度提升页面加载速度。由3s下降为1s左右。
-- 增加便捷启动，双击目录下"启动.cmd"即可自动启动笔记本，并自动打开首页
+- 增加便捷启动，双击目录下"启动.cmd"即可自动启动笔记本，并自动打开首页。
 
 [2022-05-03 Beta Version] 
 
