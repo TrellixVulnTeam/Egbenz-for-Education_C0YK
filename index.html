@@ -1,52 +1,34 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Egbenz for Education Beta</title>
-    <!-- Version Education Beta -->
-    <script>
-        function search(){
-          let name = document.getElementById("search-input").value
-          window.location.href='/'+name
-        }
-        function newArticle(){
-          window.location.href='/newArticle';
-        }
-        function submit(){
-          let e = window.event || arguments.callee.caller.arguments[0]
-          if(e.keyCode === 13) search()
-        }
-    </script>
+    <title>Egbenz for Education</title>
   </head>
 
   <body>
-    <div class="nav-left">
-      <div class="nav-title"><a href="/">Egbenz</a></div>
-      <div class="nav-search-tools"><input id="search-input" value="<< searchName >>" onkeydown="submit()"/><button onclick="search()">搜索</button><button onclick="newArticle()">新建</button></div>
-      <div class="nav-list">
-        {% for key in articles %}
-        <div class="nav-item"><a href="/article/<< key >>"><< articles[key] >></a></div>
-        {% endfor %}
+    <div id="ez-nav" class="nav-left">
+      <div class="nav-logo"><span style="cursor: pointer;">Egbenz</span></div>
+      <div class="nav-search">
+        <div class="nav-search-input">
+          <input type="text">
+        </div>
+        <div class="nav-search-button">
+          <button>搜索</button>
+          <button>+新建</button>
+        </div>
       </div>
+      <div class="nav-path"></div>
+      <div class="nav-menu"></div>
     </div>
 
-    {% if id and id != None %}
-    <div id="commondMenu" class="commond-menu">
-    </div>
-    {% endif %}
+    <div id="ez-menu" class="commond-menu"></div>
 
     <div id="main">
-      {% if id and id != None %}
-      <div class="title"><input id="title" value="文件名"/></div>
-      <div id="editor">
-
-      </div>
-      {% else %}
-      <div id="create-article" ><a href="/newArticle">创建新文档</a></div>
-      {% endif %}
+      <div class="title"><input id="title" value="文件名" /></div>
+      <div id="editor"></div>
     </div>
-  
+    <div id="create-article">
+      <span class="create-article-a">创建新文档</span>
+    </div>
   </body>
-  <script type="text/javascript" src="/static/dist/bundle.js">
-
-  </script>
+  <script type="text/javascript" src="/static/dist/bundle.js"></script>
 </html>

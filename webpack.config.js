@@ -1,6 +1,5 @@
 const path = require('path')
 const webpack = require('webpack')
-
 const mode = "development" // production || development
 
 module.exports = {
@@ -13,8 +12,8 @@ module.exports = {
   module:{
     rules:[
         {
-            test:/\.css$/,
-            use:['style-loader','css-loader']
+          test:/\.css$/,
+          use:['style-loader','css-loader']
         },{
           test:/\.(ttf|woff|otf|eot|woff2)$/,
           type:'asset/resource',

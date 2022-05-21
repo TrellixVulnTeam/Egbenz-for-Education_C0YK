@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import webbrowser
 import json
-from server.api.models import saveArticle, fetchArticles, fetchArticle, newArticle, executeSQL, serverDirectory
+from server.api.models import saveArticle, fetchArticle, executeSQL, openPath, fetchFilelist, createEz
 from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(
@@ -16,27 +16,8 @@ app.jinja_env.variable_end_string = '>>'
 
 @app.route('/')
 def index():
-  articles = fetchArticles('')
-  context = {'articles':articles, 'searchName': ''}
-  return render_template('index.html', **context)
+  return render_template('index.html')
 
-@app.route('/<name>')
-def indexName(name):
-  articles = fetchArticles(name)
-  context = {'articles':articles, 'searchName': name}
-  return render_template('index.html', **context)
-
-@app.route('/newArticle')
-def indexNewArticle():
-  article, id, title = newArticle()
-  return redirect(url_for('indexArticle', id=id))
-
-@app.route('/article/<id>')
-def indexArticle(id):
-  serverDirectory()
-  articles = fetchArticles()
-  context = {'articles':articles, 'id': id}
-  return render_template('index.html', **context)
 
 @app.route('/save_ez', methods=["POST"])
 def saveEz():
@@ -45,11 +26,10 @@ def saveEz():
   saveArticle(json_data)
   return {}
 
-@app.route('/fetch_article', methods=["GET"])
+@app.route('/fetch_article', methods=["POST"])
 def ajaxFetchArticle():
-  id = request.args.get('id')
-  ez, id, title = fetchArticle(id)
-
+  json_data = json.loads(request.get_data().decode("utf-8"))
+  ez, id, title = fetchArticle(json_data['path'], json_data['name'])
   return {'ez': ez, 'id': id, 'title': title}
 
 @app.route('/sql', methods=["GET","POST"])
@@ -61,6 +41,31 @@ def ajaxSQL():
   result = executeSQL(sql, config)
 
   return result
+
+@app.route('/openpath', methods=["POST"])
+def ajaxOpenPath():
+  data = request.get_data()
+  json_data = json.loads(data.decode("utf-8"))
+  path = openPath(json_data['path'])
+  filelist = fetchFilelist(json_data['path'], "")
+  return {'filelist': filelist, 'path':path}
+
+@app.route('/create_ez', methods=["POST"])
+def ajaxCreateEz():
+  data = request.get_data()
+  json_data = json.loads(data.decode("utf-8"))
+  path = openPath(json_data['path'])
+  ez, id, title = createEz(path)
+
+  return {'ez': ez, 'id': None, 'title': title}
+
+@app.route('/filelist', methods=["POST"])
+def ajaxFilelist():
+  data = request.get_data()
+  json_data = json.loads(data.decode("utf-8"))
+  filelist = fetchFilelist(json_data['path'], json_data['searchName'])
+  return {'filelist': filelist}
+
 
 if __name__ == '__main__':
   # webbrowser.open('http://127.0.0.1:5000/', 0, autoraise=False)
