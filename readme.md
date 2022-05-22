@@ -1,6 +1,6 @@
 # Egbenz for Education
 
-[ [官网](http://www.egbenz.com) | [示例](http://www.egbenz.com/example) | [GITHUB](https://github.com/JerryZhuyi/Egbenz-for-Education) ]
+[ [官网](http://www.egbenz.com) | [示例](http://www.egbenz.com) | [GITHUB](https://github.com/JerryZhuyi/Egbenz-for-Education) ]
 
 Egbenz for Education(以下简称Egbenz-ed)是一个由Python和JS驱动的免费，持续更新的个人笔记本工具。
 
