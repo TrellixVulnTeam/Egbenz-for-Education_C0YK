@@ -7,108 +7,52 @@ import os
 from webbrowser import Error
 from pymysql import cursors
 import pymysql.cursors
-import re
+import copy
 
-def getFileIndex(name=''):
-  fileIndex = {}
-  with open("./database/ezs/_fileindex.json", 'r', encoding = 'utf-8') as file_obj:
-    fileIndex = json.load(file_obj)
-
-  if(name.lstrip() == ''):  
-    return fileIndex
+def fixPathName(path, nname):
+  name = copy.deepcopy(nname)
+  dPath = copy.deepcopy(path)
+  nameWith = name
+  if((len(dPath) == 1 and dPath[0] == '根目录') or len(dPath) == 0):
+    currentPath = os.getcwd() + "\database\ezs"
+    dPath = currentPath.split(os.sep)
   else:
-    filterObj = {}
-    for key in fileIndex:
-      n = fileIndex[key]
-      if name in n:
-        filterObj[key] = n
-    return filterObj
+    dPath[0] = os.path.abspath(os.sep)
 
-def saveFileIndex(fileIndex):
-  with open("./database/ezs/_fileindex.json", 'w', encoding = 'utf-8') as file_obj:
-    json.dump(fileIndex, file_obj)
+  pathStr = '\\'.join(dPath)
 
+  if(name.endswith(".ez") == False):
+    nameWith = name + '.ez'
+  else:
+    name = os.path.splitext(name)[0]
+
+  if(nname != None and nname.strip() != ""):
+    pathStr = os.path.join(pathStr, nameWith)
+  
+  return dPath, name, nameWith, pathStr
+  
 
 def saveArticle(ezJson):
   ez = ezJson['ez']
   name = ezJson['title']
   path = ezJson['path']
 
-  nameWith = name
-  if(path[0] == '根目录'):
-    path[0] = os.path.abspath(os.sep)
-  if(name.endswith(".ez") == False):
-    nameWith = name + '.ez'
-  else:
-    name = os.path.splitext(name)[0]
+  dPath, nname, nnameWith, filePathStr = fixPathName(path, name)
 
-  pathStr = '\\'.join(path)
-  filePathStr = os.path.join(pathStr, nameWith)
-  print(filePathStr)
   with open(filePathStr, 'w', encoding = 'utf-8') as file_obj:
     json.dump(ez, file_obj)
 
-
-def newArticle():
-  fileIndex = getFileIndex()
-  article_id = time.strftime('%Y%m%d%H%M%S') + '_' + str(random.randint(0,1000))
-
-  article_file = article_id + ".ez"
-  article_path = os.path.join("./database/ezs", article_file)
-
-  ez = {
-    "editor":{
-      "id":"editor",
-      "parentID":"root",
-      "name":"BaseEditor",
-      "data":{
-      },
-      "children":["default_block"]
-      },
-    "default_block":{
-      "id":"default_block",
-      "parentID":"editor",
-      "name":"BaseBlock",
-      "data":{
-      },
-      "children":["default_text"]
-      },
-    "default_text":{
-      "id":"default_text",
-      "parentID":"default_block",
-      "name":"BaseText",
-      "text":"",
-      "data":{
-        "style":{}
-      },
-    },
-  }
-
-  with open(article_path, 'w', encoding = 'utf-8') as file_obj:
-    json.dump(ez, file_obj)
-
-  fileIndex[article_id] = "标题"
-  saveFileIndex(fileIndex)
-
-  return ez,article_id,"标题"
-  
-
-def fetchArticles(name=''):
-  articles = getFileIndex(name)
-
-  return articles
+def renameArticle(path, oldName, newName):
+  oPath, oName, oNameWith, oPathStr = fixPathName(path, oldName)
+  nPath, nName, nNameWith, nPathStr = fixPathName(path, newName)
+  try:
+    os.rename(oPathStr,nPathStr)
+    return nName
+  except:
+    return oName  
 
 def fetchArticle(path, name):
-  nameWith = name
-  if(path[0] == '根目录'):
-    path[0] = os.path.abspath(os.sep)
-  if(name.endswith(".ez") == False):
-    nameWith = name + '.ez'
-  else:
-    name = os.path.splitext(name)[0]
-
-  pathStr = '\\'.join(path)
-  filePathStr = os.path.join(pathStr, nameWith)
+  dPath, nname, nnameWith, filePathStr = fixPathName(path, name)
 
   with open(os.path.join(filePathStr), 'r', encoding = 'utf-8') as file_obj:
     article = json.load(file_obj)
@@ -136,16 +80,15 @@ def executeSQL(sql, config):
     return {'result':[['错误信息'], [err]]}
 
 def openPath(path):
-  return path
+  dPath, name, nameWith, pathStr = fixPathName(path, "")
+  return dPath
 
 def fetchFilelist(path, name):
-  if(path[0] == '根目录'):
-    path[0] = os.path.abspath(os.sep)
-  pathStr = '\\'.join(path)
+  dPath, nname, nnameWith, pathStr = fixPathName(path, "")
+
   filelist = []
   files = os.listdir(pathStr)
   if(name != None):
-    print(name)
     name = name.strip()
   else:
     name = ""
@@ -223,3 +166,73 @@ def createEz(path):
     json.dump(ez, file_obj)
 
   return ez, None, filneName
+
+
+
+# abandon
+def fetchArticles(name=''):
+  articles = getFileIndex(name)
+
+  return articles
+
+def getFileIndex(name=''):
+  fileIndex = {}
+  with open("./database/ezs/_fileindex.json", 'r', encoding = 'utf-8') as file_obj:
+    fileIndex = json.load(file_obj)
+
+  if(name.lstrip() == ''):  
+    return fileIndex
+  else:
+    filterObj = {}
+    for key in fileIndex:
+      n = fileIndex[key]
+      if name in n:
+        filterObj[key] = n
+    return filterObj
+
+def saveFileIndex(fileIndex):
+  with open("./database/ezs/_fileindex.json", 'w', encoding = 'utf-8') as file_obj:
+    json.dump(fileIndex, file_obj)
+
+def newArticle():
+  fileIndex = getFileIndex()
+  article_id = time.strftime('%Y%m%d%H%M%S') + '_' + str(random.randint(0,1000))
+
+  article_file = article_id + ".ez"
+  article_path = os.path.join("./database/ezs", article_file)
+
+  ez = {
+    "editor":{
+      "id":"editor",
+      "parentID":"root",
+      "name":"BaseEditor",
+      "data":{
+      },
+      "children":["default_block"]
+      },
+    "default_block":{
+      "id":"default_block",
+      "parentID":"editor",
+      "name":"BaseBlock",
+      "data":{
+      },
+      "children":["default_text"]
+      },
+    "default_text":{
+      "id":"default_text",
+      "parentID":"default_block",
+      "name":"BaseText",
+      "text":"",
+      "data":{
+        "style":{}
+      },
+    },
+  }
+
+  with open(article_path, 'w', encoding = 'utf-8') as file_obj:
+    json.dump(ez, file_obj)
+
+  fileIndex[article_id] = "标题"
+  saveFileIndex(fileIndex)
+
+  return ez,article_id,"标题"

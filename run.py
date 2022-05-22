@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import webbrowser
 import json
-from server.api.models import saveArticle, fetchArticle, executeSQL, openPath, fetchFilelist, createEz
+from server.api.models import saveArticle, fetchArticle, executeSQL, openPath, fetchFilelist, createEz, renameArticle
 from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(
@@ -25,6 +25,13 @@ def saveEz():
   json_data = json.loads(data.decode("utf-8"))
   saveArticle(json_data)
   return {}
+
+@app.route('/rename_ez', methods=["POST"])
+def ajaxRenameEz():
+  data = request.get_data()
+  json_data = json.loads(data.decode("utf-8"))
+  newName = renameArticle(json_data['path'], json_data['oldName'], json_data['newName'])
+  return {'name':newName}
 
 @app.route('/fetch_article', methods=["POST"])
 def ajaxFetchArticle():
@@ -68,5 +75,5 @@ def ajaxFilelist():
 
 
 if __name__ == '__main__':
-  # webbrowser.open('http://127.0.0.1:5000/', 0, autoraise=False)
-  app.run(debug=True)
+  webbrowser.open('http://127.0.0.1:5000/', 0, autoraise=False)
+  app.run(debug=False)

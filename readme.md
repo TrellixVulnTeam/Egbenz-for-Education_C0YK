@@ -136,11 +136,17 @@ Make code **Brevity、Understandable、Free**, is our goal.
 We hope you can make progress together with us.
 
 ### 历史版本
-[2022-05-  V1.1]
+[2022-05-22  V1.2]
+- 调整导航栏文件读取模式
+- 增加自动保存
+- 增加插入链接功能
+- 其他更新：增加首页logo；修正重命名文件功能
+
+[2022-05-14  V1.1]
 - 修正mounted触发时机，从createDOM时刻调整至真实appendChildren时刻。
-- 增加Mysql链接插件,Python env默认安装pymysql。
+- 增加Mysql插件,默认安装pymysql。
 - 增加ModSQL模块，支持在文本任意处插入sql执行语句，目前默认执行结果不保存在ez文档中。
-- 其他更新：修正标题版本号，修正F5刷新事件, 调整第三方Mod行全选模式
+- 其他更新：修正标题版本号；修正F5刷新事件； 调整第三方Mod行全选模式。
 
 [2022-05-10 V1]
 

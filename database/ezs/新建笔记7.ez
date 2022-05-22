@@ -1,1 +1,0 @@
-{"editor": {"id": "editor", "parentID": "root", "name": "BaseEditor", "data": {}, "children": ["default_block"]}, "default_block": {"id": "default_block", "parentID": "editor", "name": "BaseBlock", "data": {}, "children": ["default_text"]}, "default_text": {"id": "default_text", "parentID": "default_block", "name": "BaseText", "text": "", "data": {"style": {}}}}
