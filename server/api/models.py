@@ -14,12 +14,12 @@ def fixPathName(path, nname):
   dPath = copy.deepcopy(path)
   nameWith = name
   if((len(dPath) == 1 and dPath[0] == '根目录') or len(dPath) == 0):
-    currentPath = os.getcwd() + "\database\ezs"
+    currentPath = os.getcwd() + "/database/ezs"
     dPath = currentPath.split(os.sep)
   else:
     dPath[0] = os.path.abspath(os.sep)
 
-  pathStr = '\\'.join(dPath)
+  pathStr = '/'.join(dPath)
 
   if(name.endswith(".ez") == False):
     nameWith = name + '.ez'
@@ -93,6 +93,7 @@ def fetchFilelist(path, name):
   else:
     name = ""
 
+  files = sorted(files, key=str.lower)
   for file in files:
     if os.path.isdir(os.path.join(pathStr, file)):
       filelist.append({'filename': str(file), 'type':'folder'})
@@ -112,7 +113,7 @@ def fetchFilelist(path, name):
 def createEz(path):
   if(path[0] == '根目录'):
     path[0] = os.path.abspath(os.sep)
-  pathStr = '\\'.join(path)
+  pathStr = '/'.join(path)
   filePathStr = os.path.join(pathStr, "新建笔记")
   filneName = "新建笔记"
   i=0
