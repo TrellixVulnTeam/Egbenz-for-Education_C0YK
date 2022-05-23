@@ -136,6 +136,12 @@ Make code **Brevity、Understandable、Free**, is our goal.
 We hope you can make progress together with us.
 
 ### 历史版本
+[2022-05-23 v1.3]
+- 增加背景色控制命令,增加标题粒度控制命令,增加对齐控制命令,增加链接命令便捷取绑按钮
+- 增加Mod属性样式过滤功能
+- 修正ModLink转化为BaseText时，继续携带href参数问题
+
+
 [2022-05-22  V1.2]
 - 调整导航栏文件读取模式
 - 增加自动保存
